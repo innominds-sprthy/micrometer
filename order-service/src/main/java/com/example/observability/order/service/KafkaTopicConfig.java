@@ -9,7 +9,7 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopicConfig {
 
-	@Value("${micrometer.topic}")
+	@Value("${order.events.topic}")
 	private String topic;
 
 	@Bean
