@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.example.observability.tracewise.model.dto.Trace;
 import com.example.observability.tracewise.model.dto.TraceInfo;
+import com.example.observability.tracewise.repository.TraceRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,6 +45,10 @@ public class LogProcessor {
 
 	@Value("${traceId.delimiter}")
 	private String traceIdDelimiter;
+	
+	@Autowired
+	 private TraceRepository traceRepository;
+
 
 	@Scheduled(cron = "${trace.logprocessor.scheduler.cron}")
 	public void runTask() {
@@ -115,10 +121,20 @@ public class LogProcessor {
 				StringBuilder sb = new StringBuilder();
 				sb.append(serviceName).append("-").append(className).append("-").append(methodName);
 				traces.add(sb.toString());
+				// Code to store data into db
+				Trace trace =new Trace();
+				trace.setAppName(serviceName);
+				trace.setClassName(className);
+				trace.setMethodName(methodName);
+				trace.setTestCaseId(traceId);
+				trace.setTraceId(traceId);
+				trace.setSpanId(spanId);
+				traceRepository.save(trace);		  
 			}
 		}
 	}
 
+	
 	private void findFiles(List<String> fileNames, File dir) {
 		if (dir.isDirectory()) {
 			File files[] = dir.listFiles();
@@ -137,4 +153,5 @@ public class LogProcessor {
 			fileNames.add(file.getAbsolutePath());
 		}
 	}
+	// 
 }

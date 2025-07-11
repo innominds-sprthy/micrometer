@@ -1,9 +1,9 @@
 package com.example.observability.tracewise.service;
 
-import java.util.Collection;
+import com.example.observability.tracewise.model.dto.TestCaseResponse;
 
 public interface ITraceService {
 
-	Collection fetchTraces(String traceId);
+	TestCaseResponse fetchTraces(String traceId);
 
 }
