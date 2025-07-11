@@ -28,6 +28,7 @@ public class OrderPaymentService {
 
 	public void processOrderPayments(Order order) {
 		try {
+			log.info("Processing order payment");
 			// Serialize the Order object to JSON
 			String orderJson = objectMapper.writeValueAsString(getOrderPayment(order));
 			// Send the JSON payload to Kafka
@@ -43,7 +44,6 @@ public class OrderPaymentService {
 	}
 
 	private OrderPayment getOrderPayment(Order order) {
-		// TODO: generate actual amount wrt to an inventory
 		double amount = ThreadLocalRandom.current().nextDouble(10, 120);
 		return new OrderPayment(order.id(), order.paymentToken(), amount);
 	}

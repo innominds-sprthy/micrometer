@@ -8,12 +8,13 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>tracewise-context</module>
+		<module>tracewise</module>
 		<module>order-service</module>
 		<module>payment-service</module>
 		<module>customer-service</module>
 		<module>inventory-management-service</module>
 		<module>search-service</module>
-		<module>tracewise</module>
 	</modules>
 
 	<properties>

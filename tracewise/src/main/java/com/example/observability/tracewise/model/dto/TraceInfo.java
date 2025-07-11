@@ -13,5 +13,6 @@ import lombok.Data;
 public class TraceInfo {
 
 	private Map<String, Set<String>> traceMap = new ConcurrentHashMap<>();
+	private Map<String, Set<String>> classMap = new ConcurrentHashMap<>();
 
 }

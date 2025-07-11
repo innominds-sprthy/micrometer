@@ -1,5 +1,7 @@
 package com.example.observability.tracewise.controller;
 
+import java.util.Collection;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +24,16 @@ public class TraceWiseController {
 		this.traceService = traceService;
 	}
 
-	@GetMapping("/{traceId}")
+@GetMapping("/testcase/{traceId}")
 	public ResponseEntity<TestCaseResponse> placeOrder(@PathVariable("traceId") String traceId) {
 		TestCaseResponse traces = traceService.fetchTraces(traceId);
 		return ResponseEntity.ok(traces);
 	}
 
+	@GetMapping("/class/{className}")
+	public ResponseEntity<Collection> findClassTraces(@PathVariable("className") String className) {
+		Collection traces = traceService.fetchClasses(className);
+		return ResponseEntity.ok(traces);
+	}
+	
 }

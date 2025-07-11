@@ -120,6 +120,12 @@ public class LogProcessor {
 				}
 				StringBuilder sb = new StringBuilder();
 				sb.append(serviceName).append("-").append(className).append("-").append(methodName);
+				Set<String> classTraces = this.traceInfo.getClassMap().get(className);
+				if (classTraces == null) {
+					classTraces = new LinkedHashSet<>();
+					this.traceInfo.getClassMap().put(className, classTraces);
+				}
+				classTraces.add(traceId);
 				traces.add(sb.toString());
 				// Code to store data into db
 				Trace trace =new Trace();

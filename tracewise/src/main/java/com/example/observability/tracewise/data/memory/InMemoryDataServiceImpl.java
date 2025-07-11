@@ -1,5 +1,6 @@
 package com.example.observability.tracewise.data.memory;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -81,4 +82,9 @@ public class InMemoryDataServiceImpl implements IDataService {
 	        return new TestCaseResponse(testCaseList);
 	    }
 	
+	@Override
+	public Collection fetchClasses(String className) {
+		return this.traceInfo.getClassMap().get(className);
+	}
+
 }
