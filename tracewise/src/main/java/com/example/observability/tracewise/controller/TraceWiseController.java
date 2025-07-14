@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.observability.tracewise.model.dto.TestCaseResponse;
+import com.example.observability.tracewise.model.dto.TraceDTO;
 import com.example.observability.tracewise.service.ITraceService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,16 +24,16 @@ public class TraceWiseController {
 		this.traceService = traceService;
 	}
 
-@GetMapping("/testcase/{traceId}")
-	public ResponseEntity<TestCaseResponse> placeOrder(@PathVariable("traceId") String traceId) {
-		TestCaseResponse traces = traceService.fetchTraces(traceId);
+	@GetMapping("/traceInfo/{traceId}")
+	public ResponseEntity<TraceDTO> placeOrder(@PathVariable("traceId") String traceId) {
+		TraceDTO traces = traceService.fetchTraces(traceId);
 		return ResponseEntity.ok(traces);
 	}
 
-	@GetMapping("/class/{className}")
+	@GetMapping("/classInfo/{className}")
 	public ResponseEntity<Collection> findClassTraces(@PathVariable("className") String className) {
 		Collection traces = traceService.fetchClasses(className);
 		return ResponseEntity.ok(traces);
 	}
-	
+
 }

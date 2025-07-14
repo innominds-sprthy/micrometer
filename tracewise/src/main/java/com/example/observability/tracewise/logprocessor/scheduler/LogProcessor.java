@@ -119,7 +119,6 @@ public class LogProcessor {
 				trace.setAppName(serviceName);
 				trace.setClassName(className);
 				trace.setMethodName(methodName);
-				trace.setTestCaseId(traceId);
 				trace.setTraceId(traceId);
 				trace.setSpanId(spanId);
 				dataService.save(trace);

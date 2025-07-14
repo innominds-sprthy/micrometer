@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.stereotype.Service;
 
 import com.example.observability.tracewise.data.ITraceDataService;
-import com.example.observability.tracewise.model.dto.TestCaseResponse;
+import com.example.observability.tracewise.model.dto.TraceDTO;
 import com.example.observability.tracewise.service.ITraceService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class TraceServiceImpl implements ITraceService {
 	}
 
 	@Override
-	public TestCaseResponse fetchTraces(String traceId) {
+	public TraceDTO fetchTraces(String traceId) {
 		return this.dataService.findTraces(traceId);
 	}
 

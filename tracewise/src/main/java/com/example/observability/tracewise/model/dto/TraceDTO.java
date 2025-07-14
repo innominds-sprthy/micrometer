@@ -5,13 +5,13 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class TestCaseDTO {
+public class TraceDTO {
 
-	private String testCase;
+	private String traceId;
 	private List<AppDTO> apps;
 
-	public TestCaseDTO(String testCase, List<AppDTO> apps) {
-		this.testCase = testCase;
+	public TraceDTO(String traceId, List<AppDTO> apps) {
+		this.traceId = traceId;
 		this.apps = apps;
 	}
 }

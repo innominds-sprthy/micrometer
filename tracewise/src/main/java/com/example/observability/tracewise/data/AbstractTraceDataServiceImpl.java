@@ -6,24 +6,21 @@ import java.util.stream.Collectors;
 
 import com.example.observability.tracewise.model.dto.AppDTO;
 import com.example.observability.tracewise.model.dto.ClassDTO;
-import com.example.observability.tracewise.model.dto.MethodDTO;
-import com.example.observability.tracewise.model.dto.TestCaseDTO;
-import com.example.observability.tracewise.model.dto.TestCaseResponse;
 import com.example.observability.tracewise.model.dto.Trace;
+import com.example.observability.tracewise.model.dto.TraceDTO;
 
 public abstract class AbstractTraceDataServiceImpl implements ITraceDataService {
 
-	protected TestCaseResponse convertToJson(List<Trace> results) {
-		// Group by testcase
-		Map<String, List<Trace>> testcaseGroup = results.stream().collect(Collectors.groupingBy(Trace::getTestCaseId));
+	protected TraceDTO convertToJson(List<Trace> results) {
+		// Group by traceId
+		Map<String, List<Trace>> traceGroups = results.stream().collect(Collectors.groupingBy(Trace::getTraceId));
 
-		List<TestCaseDTO> testCaseList = testcaseGroup.entrySet().stream().map(testcaseEntry -> {
-			String testcase = testcaseEntry.getKey();
-			List<Trace> testcaseResults = testcaseEntry.getValue();
+		List<TraceDTO> traces = traceGroups.entrySet().stream().map(traceResultsEntry -> {
+			String traceId = traceResultsEntry.getKey();
+			List<Trace> traceList = traceResultsEntry.getValue();
 
 			// Group by app
-			Map<String, List<Trace>> appGroup = testcaseResults.stream()
-					.collect(Collectors.groupingBy(Trace::getAppName));
+			Map<String, List<Trace>> appGroup = traceList.stream().collect(Collectors.groupingBy(Trace::getAppName));
 
 			List<AppDTO> apps = appGroup.entrySet().stream().map(appEntry -> {
 				String app = appEntry.getKey();
@@ -35,7 +32,7 @@ public abstract class AbstractTraceDataServiceImpl implements ITraceDataService 
 
 				List<ClassDTO> classes = classGroup.entrySet().stream().map(classEntry -> {
 					String classname = classEntry.getKey();
-					List<MethodDTO> methods = classEntry.getValue().stream().map(r -> new MethodDTO(r.getMethodName()))
+					List<String> methods = classEntry.getValue().stream().map(r -> r.getMethodName())
 							.collect(Collectors.toList());
 					return new ClassDTO(classname, methods);
 				}).collect(Collectors.toList());
@@ -43,10 +40,12 @@ public abstract class AbstractTraceDataServiceImpl implements ITraceDataService 
 				return new AppDTO(app, classes);
 			}).collect(Collectors.toList());
 
-			return new TestCaseDTO(testcase, apps);
+			return new TraceDTO(traceId, apps);
 		}).collect(Collectors.toList());
-
-		return new TestCaseResponse(testCaseList);
+		if (traces != null && !traces.isEmpty()) {
+			return traces.get(0);
+		}
+		return null;
 	}
 
 }

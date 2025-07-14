@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.observability.tracewise.data.AbstractTraceDataServiceImpl;
 import com.example.observability.tracewise.data.ITraceDataService;
-import com.example.observability.tracewise.model.dto.TestCaseResponse;
 import com.example.observability.tracewise.model.dto.Trace;
+import com.example.observability.tracewise.model.dto.TraceDTO;
 import com.example.observability.tracewise.model.dto.TraceInfo;
 import com.example.observability.tracewise.repository.TraceRepository;
 
@@ -31,7 +31,7 @@ public class RdbmsTraceDataServiceImpl extends AbstractTraceDataServiceImpl impl
 	}
 
 	@Override
-	public TestCaseResponse findTraces(String traceId) {
+	public TraceDTO findTraces(String traceId) {
 		// Get data from db
 		List<Trace> traceList = traceRepo.findByTraceId(traceId);
 		return convertToJson(traceList);
