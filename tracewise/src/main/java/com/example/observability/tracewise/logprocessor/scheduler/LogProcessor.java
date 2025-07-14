@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.example.observability.tracewise.data.ITraceDataService;
 import com.example.observability.tracewise.model.dto.Trace;
 import com.example.observability.tracewise.model.dto.TraceInfo;
-import com.example.observability.tracewise.repository.TraceRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,9 +30,6 @@ public class LogProcessor {
 
 	@Autowired
 	private TraceInfo traceInfo;
-
-	@Value("${tracewise.inmemory}")
-	private String inMemory;
 
 	@Value("${logs.location}")
 	private String logsDir;
@@ -45,10 +42,9 @@ public class LogProcessor {
 
 	@Value("${traceId.delimiter}")
 	private String traceIdDelimiter;
-	
-	@Autowired
-	 private TraceRepository traceRepository;
 
+	@Autowired
+	private ITraceDataService dataService;
 
 	@Scheduled(cron = "${trace.logprocessor.scheduler.cron}")
 	public void runTask() {
@@ -62,13 +58,16 @@ public class LogProcessor {
 		File dir = new File(logsDir);
 		findFiles(fileNames, dir);
 		log.debug("File names :: {}", fileNames);
-		fileNames.parallelStream().forEach(fileName -> processFile(fileName));
+		Map<String, String> processDone = new HashMap<>();
+		fileNames.parallelStream().forEach(fileName -> processFile(fileName, processDone));
+		if (processDone.isEmpty()) {
+			log.debug("Trace Map :: {}", this.traceInfo.getTraceMap());
+		}
 		return null;
 	}
 
-	private Object processFile(String fileName) {
+	private Object processFile(String fileName, Map<String, String> processDone) {
 		log.debug("Processing file :: {}", fileName);
-		Map<String, String> processDone = new HashMap<>();
 		processDone.put(fileName, fileName);
 		List<String> lines = null;
 		try {
@@ -83,9 +82,6 @@ public class LogProcessor {
 			});
 		}
 		processDone.remove(fileName);
-		if (processDone.isEmpty()) {
-			log.debug("Trace Map :: {}", this.traceInfo.getTraceMap());
-		}
 		return null;
 	}
 
@@ -113,34 +109,24 @@ public class LogProcessor {
 				spanId = traceArr[4];
 
 			if (traceId != null) {
-				Set<String> traces = this.traceInfo.getTraceMap().get(traceId);
-				if (traces == null) {
-					traces = new LinkedHashSet<>();
-					this.traceInfo.getTraceMap().put(traceId, traces);
-				}
-				StringBuilder sb = new StringBuilder();
-				sb.append(serviceName).append("-").append(className).append("-").append(methodName);
 				Set<String> classTraces = this.traceInfo.getClassMap().get(className);
 				if (classTraces == null) {
 					classTraces = new LinkedHashSet<>();
 					this.traceInfo.getClassMap().put(className, classTraces);
 				}
 				classTraces.add(traceId);
-				traces.add(sb.toString());
-				// Code to store data into db
-				Trace trace =new Trace();
+				Trace trace = new Trace();
 				trace.setAppName(serviceName);
 				trace.setClassName(className);
 				trace.setMethodName(methodName);
 				trace.setTestCaseId(traceId);
 				trace.setTraceId(traceId);
 				trace.setSpanId(spanId);
-				traceRepository.save(trace);		  
+				dataService.save(trace);
 			}
 		}
 	}
 
-	
 	private void findFiles(List<String> fileNames, File dir) {
 		if (dir.isDirectory()) {
 			File files[] = dir.listFiles();
@@ -159,5 +145,4 @@ public class LogProcessor {
 			fileNames.add(file.getAbsolutePath());
 		}
 	}
-	// 
 }
