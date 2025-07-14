@@ -18,7 +18,15 @@ public class OrderService {
 
 	public void placeOrder(Order order) {
 		log.info("Placing order : order id {}", order.id());
+		orderProcessingService.processInventory();
 		orderProcessingService.processOrder(order);
+		
+	}
+	
+	public void placeInventory()
+	{
+		log.info("Place inventory");
+		orderProcessingService.processInventory();
 	}
 
 	public void updateOrderStatus(Order order) {
