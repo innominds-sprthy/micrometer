@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.observability.tracewise.data.AbstractTraceDataServiceImpl;
 import com.example.observability.tracewise.data.ITraceDataService;
-import com.example.observability.tracewise.model.dto.TestCaseResponse;
 import com.example.observability.tracewise.model.dto.Trace;
+import com.example.observability.tracewise.model.dto.TraceDTO;
 import com.example.observability.tracewise.model.dto.TraceInfo;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class InMemoryTraceDataServiceImpl extends AbstractTraceDataServiceImpl i
 	private TraceInfo traceInfo;
 
 	@Override
-	public TestCaseResponse findTraces(String traceId) {
+	public TraceDTO findTraces(String traceId) {
 		List<Trace> traceList = new ArrayList<Trace>(this.traceInfo.getTraceMap().get(traceId));
 		return convertToJson(traceList);
 	}

@@ -8,9 +8,9 @@ import lombok.Data;
 public class ClassDTO {
 
 	private String classname;
-	private List<MethodDTO> methods;
+	private List<String> methods;
 
-	public ClassDTO(String classname, List<MethodDTO> methods) {
+	public ClassDTO(String classname, List<String> methods) {
 		this.classname = classname;
 		this.methods = methods;
 	}
