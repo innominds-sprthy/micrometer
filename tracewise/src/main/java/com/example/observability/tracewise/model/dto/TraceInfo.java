@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class TraceInfo {
 
-	private Map<String, Set<String>> traceMap = new ConcurrentHashMap<>();
+	private Map<String, Set<Trace>> traceMap = new ConcurrentHashMap<>();
 	private Map<String, Set<String>> classMap = new ConcurrentHashMap<>();
 
 }

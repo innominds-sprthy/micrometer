@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.springframework.stereotype.Service;
 
-import com.example.observability.tracewise.data.IDataService;
+import com.example.observability.tracewise.data.ITraceDataService;
 import com.example.observability.tracewise.model.dto.TestCaseResponse;
 import com.example.observability.tracewise.service.ITraceService;
 
@@ -14,9 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TraceServiceImpl implements ITraceService {
 
-	private final IDataService dataService;
+	private ITraceDataService dataService;
 
-	public TraceServiceImpl(IDataService dataService) {
+	public TraceServiceImpl(ITraceDataService dataService) {
 		this.dataService = dataService;
 	}
 
